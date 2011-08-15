@@ -32,12 +32,12 @@ The AMON standard is licensed under a [Creative Commons Attribution 2.0 UK: Engl
 * [Goals of AMON](#goals)
 * [The AMON Data Format](#data_format)
   * [Data Format Description](#description)
-    * [UUIDs](#UUIDs)
-    * [Numbers](#numbers)
-    * [Meters](#meters)
-    * [Metering Points](#metering_points)
-    * [Entities](#entities)
-    * [Standard Reading Types](#reading_types)
+  * [UUIDs](#UUIDs)
+  * [Numbers](#numbers)
+  * [Meters](#meters)
+  * [Metering Points](#metering_points)
+  * [Entities](#entities)
+  * [Standard Reading Types](#reading_types)
 * [Examples](#examples)
 * [References](#references)
 * [Appendix](#appendix)
@@ -134,15 +134,15 @@ The AMON data format consists of three main sections:
 * **meteringPoints**: The "meteringPoints" section is used for representing physical or virtual *metering points* -- that is, physical or virtual points where metering/monitoring is performed (perhaps for billing purposes) but which is desired to be kept separate from a physical or virtual metering/monitoring devices (e.g. so that if a device fails, and needs to be replaced, the "meteringPoint" can remain, and a new "meter" can be added to replace the old "meter"); or a physical or virtual collection of metering/monitoring devices with a related purpose (e.g. an electrical metering system as a "meteringPoint" with a number of sub-"meters").
 * **entities**: The "entities" section is used for representing real world or virtual *entities* that may relate to "meters" and/or "meteringPoints", such as businesses, properties, buildings, people, universities -- anything, really, that may have a 1:n relationship with "meters" and/or "meteringPoints".
 
-#### <a name="UUIDs"></a>UUIDs
+### <a name="UUIDs"></a>UUIDs
 
 Where a string UUID is defined in the data format, a standard Universally Unique Identifier [\[3\]](#3) should be used.
 
-#### <a name="numbers"></a>Numbers
+### <a name="numbers"></a>Numbers
 
 Where a number is defined in the data format, positive and negative integers and floating point numbers are acceptable. Numbers may be defined in either normal numeric or scientific notation. (It is left up to the implementation of devices/systems that use AMON regarding the precision of floating point numbers.)
 
-#### <a name="meters"></a>Meters
+### <a name="meters"></a>Meters
 
 In the AMON data format, the "meters" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "meter", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
 
@@ -174,7 +174,7 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **error**: Optional string, describing an error condition if no "value" is present.
   * **aggregated**: Optional boolean, set to true if the measurement data being described/exchanged has been aggregated (i.e. is not individual raw data values, but has been aggregated to reduce the number of "measurement" items that need to be listed).
 
-#### <a name="metering_points"></a>Metering Points
+### <a name="metering_points"></a>Metering Points
 
 In the AMON data format, the "meteringPoints" section is used to represent physical or virtual metering points. Note that because the relationship between a "meter" and a "meteringPoint" is defined in the "meter" section of the data format, a "meteringPoint" may have one or more "meters"; but a "meter" may belong to at most one "meteringPoint".
 
@@ -183,7 +183,7 @@ All of the fields for the "meteringPoints" section of the AMON data format are d
 * **meteringPointId**: A UUID for the "meteringPoint". Required for a "meteringPoint"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meteringPoint" be created.
 * **metadata**: An optional JSON object of metadata about the "meteringPoint". This allows the AMON data format to handle any type of metadata relating to the "meter".
 
-#### <a name="entities"></a>Entities
+### <a name="entities"></a>Entities
 
 In the AMON data format, the "entities" section is used to represent physical or virtual entities which may have a relationship with a "meter" or "meteringPoint".
 
@@ -193,7 +193,7 @@ All of the fields for the "entities" section of the AMON data format are discuss
 * **meterIds**: An array of "meter" UUIDs, representing the "meters" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
-#### <a name="reading_types"></a>Standard Reading Types
+### <a name="reading_types"></a>Standard Reading Types
 
 All "meters" in the AMON data format must, in order to be able to describe/exchange metering/monitoring data, define "readings", to which "measurements" can then be associated via the defined "type".
 
@@ -450,31 +450,28 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 ### <a name="history"></a>Revision History
 
 * Version 0.9: 2011-08-15 - Andrew Hill
-  * Major update to the layout of the AMON standard.
-  * Vastly improved the flow of the standard.
-  * Major improvements to the clarity of the various sections of the data format.
-  * Removed many implementation specific sections that are not part of AMON.
-  * Updated the specification for "meteringPoints" to make metering points more general than originally defined. 
+  * Major update to the description of the AMON data format.
+  * Major update to the layout of the document.
+  * Removed text relating to AMEE's implementation of AMON that are not relevant to the data format.
+  * Updated the specification for "meteringPoints" to allow them to be more general; "MeteringPoints" are no longer confined to representing customer billing points.
 * Version 0.8: 2011-05-12 - Andrew Hill
   * Further clarification made between the AMON standard and the API.
+  * Minor improvements to documentation of data format.
 * Version 0.7: 2010-11-26 - Paul Carey
   * Clarified relationship between the AMON standard and API.
   * Removed redundant reference to name in reading.
-* Version 0.6: 2010-11-12 - Paul Carey
+* Version 05 - 0.6: 2010-11-12 - Paul Carey
   * Added string and boolean to measurement value types.
   * Removed now redundant Reserved Property Names.
   * Added Contributors section.
-* Version 0.5: 2010-11-11 - Paul Carey
   * Added windowOpen type.
 * Version 0.4: 2010-08-16 - Paul Carey
   * Added location and error fields.
   * Formalised separation between format and API.
-* Version 0.3: 2010-07-02 - Paul Carey
+* Version 0.1 - 0.3: 2010-07-02 - Paul Carey
   * Updated to reflect current usage and demands.
-* Version 0.2: 2010-05-10 - Paul Carey
-  * Modified with feedback from Bo Fussing.
-* Version 0.1: 2010-02-24 - Paul Carey
-  * Initial version published.
+  * Modified based on itial feedback
+  * Initial version created.
 
 ### <a name="contribute"></a>Contributing to AMON
 
