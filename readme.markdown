@@ -1,8 +1,3 @@
----
-title: AMON Data Format
-layout: default
----
-
 # AMON v0.9
 
 ## <a name="copyright"></a>Copyright
