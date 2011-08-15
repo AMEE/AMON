@@ -432,13 +432,13 @@ The "meter" has been defined with one "reading", and two "measurements" for that
       ]
     }
 
-## <a name="references"></a>References
+## <a name="references"></a>References
 
-1. <a name="1"></a>[http://json.org/](http://json.org/)
-2. <a name="2"></a>[http://www.ietf.org/rfc/rfc3339.txt](http://www.ietf.org/rfc/rfc3339.txt)
-3. <a name="3"></a>[http://en.wikipedia.org/wiki/Universally_Unique_Identifier](http://en.wikipedia.org/wiki/Universally_Unique_Identifier)
-4. <a name="4"></a>[http://jscience.org/api/javax/measure/unit/SI.html](http://jscience.org/api/javax/measure/unit/SI.html)
-5. <a name="5"></a>[http://jscience.org/api/javax/measure/unit/NonSI.html](http://jscience.org/api/javax/measure/unit/NonSI.html)
+1. <http://json.org/> <a name="1"></a>
+2. <http://www.ietf.org/rfc/rfc3339.txt> <a name="2"></a>
+3. <http://en.wikipedia.org/wiki/Universally_Unique_Identifier> <a name="3"></a>
+4. <http://jscience.org/api/javax/measure/unit/SI.html> <a name="4"></a>
+5. <http://jscience.org/api/javax/measure/unit/NonSI.html> <a name="5"></a>
 
 ## <a name="appendix"></a>Appendix
 
