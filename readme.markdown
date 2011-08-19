@@ -1,4 +1,4 @@
-# AMON v0.9
+# AMON v1.0
 
 ## <a name="copyright"></a>Copyright
 
@@ -66,6 +66,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meters": [
         {
           "meterId": required string UUID,
+          "description": optional string,
           "originId": optional string UUID,
           "meteringPointId": optional string UUID,
           "privacy": required string, either "private" or "public",
@@ -103,6 +104,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meteringPoints": [
         {
           "meteringPointId": required string UUID,
+          "description": optional string,
           "metadata": {
             optional JSON object
           }
@@ -112,6 +114,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "entities": [
         {
           "entityId": required string UUID,
+          "description": optional string,
           "meterIds": [ required array of string UUIDs, empty array permitted ],
           "meteringPointIds": [ optional array of string UUIDs, empty array permitted ]
         }
@@ -146,6 +149,7 @@ The AMON data format also allows for a "meter" to be a *clone* clone of another 
 All of the fields for the "meters" section of the AMON data format are discussed in more detail below.
 
 * **meterId**: A UUID for the "meter". Required for a "meter"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meter" be created. 
+* **description**: An optional textual description of the meter. Commonly used for an in-house meter ID and/or other useful identifier.
 * **originId**: An optional UUID of another "meter", if this "meter" is a clone of that "meter".
 * **meteringPointId**: An optional UUID of a "meteringPoint", if this "meter" is to be considered part of that "meteringPoint".
 * **privacy**: Should the information about this meter/monitor and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
@@ -176,6 +180,7 @@ In the AMON data format, the "meteringPoints" section is used to represent physi
 All of the fields for the "meteringPoints" section of the AMON data format are discussed in more detail below.
 
 * **meteringPointId**: A UUID for the "meteringPoint". Required for a "meteringPoint"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meteringPoint" be created.
+* **description**: An optional textual description of the metering point.
 * **metadata**: An optional JSON object of metadata about the "meteringPoint". This allows the AMON data format to handle any type of metadata relating to the "meter".
 
 ### <a name="entities"></a>Entities
@@ -185,6 +190,7 @@ In the AMON data format, the "entities" section is used to represent physical or
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
 * **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created. 
+* **description**: An optional textual description of the entity.
 * **meterIds**: An array of "meter" UUIDs, representing the "meters" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
@@ -444,11 +450,14 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 
 ### <a name="history"></a>Revision History
 
+* Version 1.0: 2011-08-19 - Andrew Hill
+  * Added the "description" field to "meters", "meteringPoints" and "entities".
+  * Made a minor typo correcton to the revision history log.
 * Version 0.9: 2011-08-15 - Andrew Hill
   * Major update to the description of the AMON data format.
   * Major update to the layout of the document.
   * Removed text relating to AMEE's implementation of AMON that are not relevant to the data format.
-  * Updated the specification for "meteringPoints" to allow them to be more general; "MeteringPoints" are no longer confined to representing customer billing points.
+  * Updated the specification for "meteringPoints" to allow them to be more general; "meteringPoints" are no longer confined to representing customer billing points.
 * Version 0.8: 2011-05-12 - Andrew Hill
   * Further clarification made between the AMON standard and the API.
   * Minor improvements to documentation of data format.
