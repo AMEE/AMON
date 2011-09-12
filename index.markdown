@@ -3,7 +3,7 @@ title: AMON Data Format
 layout: default
 ---
 
-# AMON v1.0
+# AMON v2.0
 
 ## <a name="copyright"></a>Copyright
 
@@ -89,19 +89,17 @@ The the full AMON data format is shown below. A [full description of the format]
               "unit": optional string,
               "resolution": optional number,
               "accuracy": optional number,
-              "period": required string, either "instant" or "duration",
-            }
+              "period": required string, currently only "instant" supported
+            },
           ],
-          "measurements":[
+          "measurements": [
             {
               "type": required string,
-              "timestamp": RFC 3339 string, required if the period is "instant", forbidden otherwise, 
-              "startDate": RFC 3339 string, required if the period is "duration", forbidden otherwise,
-              "endDate":   RFC 3339 string, required if the period is "duration", forbidden otherwise,
+              "timestamp": RFC 3339 string, required,
               "value": number, boolean or string, required unless "error" (below) is present,
               "error": string, required unless "value" (above) is present,
-              "aggregated": optional boolean,
-            }
+              "aggregated": optional boolean
+            },
           ]    
         }
       ],
@@ -168,12 +166,10 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
   * **resolution**: Optional string, defining the resolution of the "reading".
   * **accuracy**: Optional string, defining the accuracy of the "reading".
-  * **period**: Optional string, defining if the "reading" is either "instant" or "duration". Instantaneous readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Durational readings are from devices that produce a "measurement" that is based on what has happened between a given (and supplied) start and end date. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
+  * **period**: Required string, defining the type of "reading". Currently, only "instant" is supported. Readings of type "instant" are readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Other types may be added in the future. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
 * **measurements**: The "measurements" section defines actual data measurements from the "meter". An array of zero or more sets of values.
   * **type**: A required string, referencing a "reading" type that is defined for the "meter". All data measurements supplied for a "meter" *must* use a "reading" "type" that has been defined for the "meter".
-  * **timestamp**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "instant", the date/time that the "measurement" was produced.
-  * **startDate**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "duration", the start date/time of the "measurement" interval.
-  * **endDate**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "duration", the end date/time of the "measurement" interval.
+  * **timestamp**: RFC 3339 [\[2\]](#2) string, required. The date/time that the "measurement" was produced.
   * **value**: Optional number, boolean or string, being the actual "measurement" value.
   * **error**: Optional string, describing an error condition if no "value" is present.
   * **aggregated**: Optional boolean, set to true if the measurement data being described/exchanged has been aggregated (i.e. is not individual raw data values, but has been aggregated to reduce the number of "measurement" items that need to be listed).
@@ -316,13 +312,11 @@ One "measurements" for each of the defined "readings" exist.
 
 ### Example 3 - Wind turbine measurements
 
-This example shows three "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574", the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574" and the third with UUID "e72e7fc0-0381-012d-25a8-0017f2cd3574". 
+This example shows two "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574" and the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574".
 
 The first "meter" has been defined with three different "readings", and one "measurements" for each of the defined "readings" exist.
 
 The second "meter" has been defined with one "reading", and one "measurements" for that "readings" exists.
-
-The third "meter" has also been defined with one "reading", and one "measurements" for that "readings" exists. Note, however, that this "reading" has a "period" of "duration", so the "measurement" for this "meter" has a "startDate" and "endDate".
 
     {
       "meters": [
@@ -369,22 +363,6 @@ The third "meter" has also been defined with one "reading", and one "measurement
               "type": "windDirection",
               "timestamp": "2010-07-02T11:39:09Z",
               "value": 243
-            }
-          ]
-        },
-        {
-          "meterId": "e72e7fc0-0381-012d-25a8-0017f2cd3574",
-          "readings": [
-            {
-              "type": "windSpeed",
-              "period": "duration"
-            }
-          ],
-          "measurements": [
-            {
-              "startDate": "2010-07-02T11:34:09Z",
-              "endDate": "2010-07-02T11:39:09Z",
-              "value": 18.2
             }
           ]
         }
@@ -455,8 +433,9 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 
 ### <a name="history"></a>Revision History
 
-* Version 1.0: 2011-08-19 - Andrew Hill
-  * Added the "description" field to "meters", "meteringPoints" and "entities".
+* Version 2.0: 2011-09-12 - Andrew Hill
+  * <https://github.com/AMEE/AMON/issues/1>: Added the "description" field to "meters", "meteringPoints" and "entities".
+  * <https://github.com/AMEE/AMON/issues/2>: Removed the "duration" reading type, as feedback suggested that this type is not relevant at all to metering/monitoring device manufacturers -- readings are always taken at an instant in time with only a single timestamp available for the reading.
   * Made a minor typo correcton to the revision history log.
 * Version 0.9: 2011-08-15 - Andrew Hill
   * Major update to the description of the AMON data format.
