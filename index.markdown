@@ -238,6 +238,7 @@ Two "measurements" for the defined "reading" exist.
       "meters": [
         {
           "meterId": "d46ec860-fc7d-012c-25a6-0017f2cd3574",
+          "description": "Example 1 Meter",
           "location": {
             "name": "kitchen"
           },
@@ -276,6 +277,7 @@ One "measurements" for each of the defined "readings" exist.
       "meters": [
         {
           "meterId": "c1810810-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 2 Meter",
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
           "readings": [
             {
@@ -306,6 +308,7 @@ One "measurements" for each of the defined "readings" exist.
       "meteringPoints": [
         {
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
+          "description": "Example 2 Metering Point"
         }
       ]
     }
@@ -322,6 +325,7 @@ The second "meter" has been defined with one "reading", and one "measurements" f
       "meters": [
         {
           "meterId": "82621440-fc7f-012c-25a6-0017f2cd3574",
+          "description": "Example 3 Meter #1",
           "readings": [
             {
               "type": "electricalInput"
@@ -353,6 +357,7 @@ The second "meter" has been defined with one "reading", and one "measurements" f
         },
         {
           "meterId": "d1635430-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 3 Meter #2",
           "readings": [
             {
               "type": "windDirection"
@@ -379,6 +384,7 @@ The entity is defined as being associated with two "meters", those with UUIDs "c
       "entities": [
         {
           "entityId": "90636240-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 4 Entity",
           "meterIds": [
             "c1810810-0381-012d-25a8-0017f2cd3574",
             "d46ec860-fc7d-012c-25a6-0017f2cd3574"
@@ -400,6 +406,7 @@ The "meter" has been defined with one "reading", and two "measurements" for that
       "meters": [
         {
           "meterId": "ed221bf0-d075-012d-287e-0017f2cd3574",
+          "description": "Example 5 Meter",
           "readings": [
             {
               "type": "windowOpen"
