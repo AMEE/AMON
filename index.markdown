@@ -3,7 +3,7 @@ title: AMON Data Format
 layout: default
 ---
 
-# AMON v0.9
+# AMON v2.0
 
 ## <a name="copyright"></a>Copyright
 
@@ -71,6 +71,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meters": [
         {
           "meterId": required string UUID,
+          "description": optional string,
           "originId": optional string UUID,
           "meteringPointId": optional string UUID,
           "privacy": required string, either "private" or "public",
@@ -88,19 +89,17 @@ The the full AMON data format is shown below. A [full description of the format]
               "unit": optional string,
               "resolution": optional number,
               "accuracy": optional number,
-              "period": required string, either "instant" or "duration",
-            }
+              "period": required string, currently only "instant" supported
+            },
           ],
-          "measurements":[
+          "measurements": [
             {
               "type": required string,
-              "timestamp": RFC 3339 string, required if the period is "instant", forbidden otherwise, 
-              "startDate": RFC 3339 string, required if the period is "duration", forbidden otherwise,
-              "endDate":   RFC 3339 string, required if the period is "duration", forbidden otherwise,
+              "timestamp": RFC 3339 string, required,
               "value": number, boolean or string, required unless "error" (below) is present,
               "error": string, required unless "value" (above) is present,
-              "aggregated": optional boolean,
-            }
+              "aggregated": optional boolean
+            },
           ]    
         }
       ],
@@ -108,6 +107,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meteringPoints": [
         {
           "meteringPointId": required string UUID,
+          "description": optional string,
           "metadata": {
             optional JSON object
           }
@@ -117,6 +117,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "entities": [
         {
           "entityId": required string UUID,
+          "description": optional string,
           "meterIds": [ required array of string UUIDs, empty array permitted ],
           "meteringPointIds": [ optional array of string UUIDs, empty array permitted ]
         }
@@ -151,6 +152,7 @@ The AMON data format also allows for a "meter" to be a *clone* clone of another 
 All of the fields for the "meters" section of the AMON data format are discussed in more detail below.
 
 * **meterId**: A UUID for the "meter". Required for a "meter"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meter" be created. 
+* **description**: An optional textual description of the meter. Commonly used for an in-house meter ID and/or other useful identifier.
 * **originId**: An optional UUID of another "meter", if this "meter" is a clone of that "meter".
 * **meteringPointId**: An optional UUID of a "meteringPoint", if this "meter" is to be considered part of that "meteringPoint".
 * **privacy**: Should the information about this meter/monitor and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
@@ -164,12 +166,10 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
   * **resolution**: Optional string, defining the resolution of the "reading".
   * **accuracy**: Optional string, defining the accuracy of the "reading".
-  * **period**: Optional string, defining if the "reading" is either "instant" or "duration". Instantaneous readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Durational readings are from devices that produce a "measurement" that is based on what has happened between a given (and supplied) start and end date. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
+  * **period**: Required string, defining the type of "reading". Currently, only "instant" is supported. Readings of type "instant" are readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Other types may be added in the future. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
 * **measurements**: The "measurements" section defines actual data measurements from the "meter". An array of zero or more sets of values.
   * **type**: A required string, referencing a "reading" type that is defined for the "meter". All data measurements supplied for a "meter" *must* use a "reading" "type" that has been defined for the "meter".
-  * **timestamp**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "instant", the date/time that the "measurement" was produced.
-  * **startDate**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "duration", the start date/time of the "measurement" interval.
-  * **endDate**: RFC 3339 [\[2\]](#2) string, required for data that relates to a "reading" "type" that has a "period" of "duration", the end date/time of the "measurement" interval.
+  * **timestamp**: RFC 3339 [\[2\]](#2) string, required. The date/time that the "measurement" was produced.
   * **value**: Optional number, boolean or string, being the actual "measurement" value.
   * **error**: Optional string, describing an error condition if no "value" is present.
   * **aggregated**: Optional boolean, set to true if the measurement data being described/exchanged has been aggregated (i.e. is not individual raw data values, but has been aggregated to reduce the number of "measurement" items that need to be listed).
@@ -181,6 +181,7 @@ In the AMON data format, the "meteringPoints" section is used to represent physi
 All of the fields for the "meteringPoints" section of the AMON data format are discussed in more detail below.
 
 * **meteringPointId**: A UUID for the "meteringPoint". Required for a "meteringPoint"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meteringPoint" be created.
+* **description**: An optional textual description of the metering point.
 * **metadata**: An optional JSON object of metadata about the "meteringPoint". This allows the AMON data format to handle any type of metadata relating to the "meter".
 
 ### <a name="entities"></a>Entities
@@ -190,6 +191,7 @@ In the AMON data format, the "entities" section is used to represent physical or
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
 * **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created. 
+* **description**: An optional textual description of the entity.
 * **meterIds**: An array of "meter" UUIDs, representing the "meters" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
@@ -236,6 +238,7 @@ Two "measurements" for the defined "reading" exist.
       "meters": [
         {
           "meterId": "d46ec860-fc7d-012c-25a6-0017f2cd3574",
+          "description": "Example 1 Meter",
           "location": {
             "name": "kitchen"
           },
@@ -274,6 +277,7 @@ One "measurements" for each of the defined "readings" exist.
       "meters": [
         {
           "meterId": "c1810810-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 2 Meter",
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
           "readings": [
             {
@@ -304,24 +308,24 @@ One "measurements" for each of the defined "readings" exist.
       "meteringPoints": [
         {
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
+          "description": "Example 2 Metering Point"
         }
       ]
     }
 
 ### Example 3 - Wind turbine measurements
 
-This example shows three "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574", the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574" and the third with UUID "e72e7fc0-0381-012d-25a8-0017f2cd3574". 
+This example shows two "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574" and the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574".
 
 The first "meter" has been defined with three different "readings", and one "measurements" for each of the defined "readings" exist.
 
 The second "meter" has been defined with one "reading", and one "measurements" for that "readings" exists.
 
-The third "meter" has also been defined with one "reading", and one "measurements" for that "readings" exists. Note, however, that this "reading" has a "period" of "duration", so the "measurement" for this "meter" has a "startDate" and "endDate".
-
     {
       "meters": [
         {
           "meterId": "82621440-fc7f-012c-25a6-0017f2cd3574",
+          "description": "Example 3 Meter #1",
           "readings": [
             {
               "type": "electricalInput"
@@ -353,6 +357,7 @@ The third "meter" has also been defined with one "reading", and one "measurement
         },
         {
           "meterId": "d1635430-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 3 Meter #2",
           "readings": [
             {
               "type": "windDirection"
@@ -363,22 +368,6 @@ The third "meter" has also been defined with one "reading", and one "measurement
               "type": "windDirection",
               "timestamp": "2010-07-02T11:39:09Z",
               "value": 243
-            }
-          ]
-        },
-        {
-          "meterId": "e72e7fc0-0381-012d-25a8-0017f2cd3574",
-          "readings": [
-            {
-              "type": "windSpeed",
-              "period": "duration"
-            }
-          ],
-          "measurements": [
-            {
-              "startDate": "2010-07-02T11:34:09Z",
-              "endDate": "2010-07-02T11:39:09Z",
-              "value": 18.2
             }
           ]
         }
@@ -395,6 +384,7 @@ The entity is defined as being associated with two "meters", those with UUIDs "c
       "entities": [
         {
           "entityId": "90636240-0381-012d-25a8-0017f2cd3574",
+          "description": "Example 4 Entity",
           "meterIds": [
             "c1810810-0381-012d-25a8-0017f2cd3574",
             "d46ec860-fc7d-012c-25a6-0017f2cd3574"
@@ -416,6 +406,7 @@ The "meter" has been defined with one "reading", and two "measurements" for that
       "meters": [
         {
           "meterId": "ed221bf0-d075-012d-287e-0017f2cd3574",
+          "description": "Example 5 Meter",
           "readings": [
             {
               "type": "windowOpen"
@@ -449,11 +440,15 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 
 ### <a name="history"></a>Revision History
 
+* Version 2.0: 2011-09-12 - Andrew Hill
+  * <https://github.com/AMEE/AMON/issues/1>: Added the "description" field to "meters", "meteringPoints" and "entities".
+  * <https://github.com/AMEE/AMON/issues/2>: Removed the "duration" reading type, as feedback suggested that this type is not relevant at all to metering/monitoring device manufacturers -- readings are always taken at an instant in time with only a single timestamp available for the reading.
+  * Made a minor typo correcton to the revision history log.
 * Version 0.9: 2011-08-15 - Andrew Hill
   * Major update to the description of the AMON data format.
   * Major update to the layout of the document.
   * Removed text relating to AMEE's implementation of AMON that are not relevant to the data format.
-  * Updated the specification for "meteringPoints" to allow them to be more general; "MeteringPoints" are no longer confined to representing customer billing points.
+  * Updated the specification for "meteringPoints" to allow them to be more general; "meteringPoints" are no longer confined to representing customer billing points.
 * Version 0.8: 2011-05-12 - Andrew Hill
   * Further clarification made between the AMON standard and the API.
   * Minor improvements to documentation of data format.
