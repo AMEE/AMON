@@ -2,7 +2,7 @@
 
 ## <a name="copyright"></a>Copyright
 
-Copyright (c) 2010-2011 AMEE UK Limited.
+Copyright (c) 2010-2012 AMEE UK Limited.
 
 <http://amee.github.com/AMON>
 
@@ -66,8 +66,9 @@ The the full AMON data format is shown below. A [full description of the format]
       "meters": [
         {
           "meterId": required string UUID,
+          "parentId": optional string UUID,
+          "entityId": optional string UUID,
           "description": optional string,
-          "originId": optional string UUID,
           "meteringPointId": optional string UUID,
           "privacy": required string, either "private" or "public",
           "location": {
@@ -84,7 +85,14 @@ The the full AMON data format is shown below. A [full description of the format]
               "unit": optional string,
               "resolution": optional number,
               "accuracy": optional number,
-              "period": required string, currently only "instant" supported
+              "period": required string, currently only "instant" supported,
+              "mode": optional string,
+              "min": optional number,
+              "max": optional number,
+              "correction": optional boolean,
+              "correctedTo": optional number,
+              "correctionFactor": optional number,
+              "correctionFactorBreakdown": optional string
             },
           ],
           "measurements": [
@@ -102,6 +110,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meteringPoints": [
         {
           "meteringPointId": required string UUID,
+          "entityId": options string UUID,
           "description": optional string,
           "metadata": {
             optional JSON object
@@ -142,13 +151,11 @@ Where a number is defined in the data format, positive and negative integers and
 
 In the AMON data format, the "meters" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "meter", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
 
-The AMON data format also allows for a "meter" to be a *clone* clone of another "meter". This allows the AMON data format to handle cases where (for example) it is desirable to describe or exchange raw data collected from a meter/monitor separately from the description/exchange of "corrected" data from that same meter/monitor (e.g. data where data outliers may have been removed, and/or correction factors and/or smoothing applied to the data, etc.).
-
 All of the fields for the "meters" section of the AMON data format are discussed in more detail below.
 
 * **meterId**: A UUID for the "meter". Required for a "meter"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meter" be created. 
+* **parentId**: A UUID for the meter's "parent". Presence of this value indicates this meter is a sub-meter.
 * **description**: An optional textual description of the meter. Commonly used for an in-house meter ID and/or other useful identifier.
-* **originId**: An optional UUID of another "meter", if this "meter" is a clone of that "meter".
 * **meteringPointId**: An optional UUID of a "meteringPoint", if this "meter" is to be considered part of that "meteringPoint".
 * **privacy**: Should the information about this meter/monitor and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
 * **location**: 
@@ -162,6 +169,13 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **resolution**: Optional string, defining the resolution of the "reading".
   * **accuracy**: Optional string, defining the accuracy of the "reading".
   * **period**: Required string, defining the type of "reading". Currently, only "instant" is supported. Readings of type "instant" are readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Other types may be added in the future. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
+  * **mode**: Optional string, defining the capture mode of the data. May be one of "instant", "cumulative" or "pulse".
+  * **min**: Optional number, defining the minimum valid value for the data.
+  * **max**: Optional number, defining the maximum valid value for the data.
+  * **correction**: Optional boolean, defining whether a correction factor has been applied to the data.
+  * **correctedTo**: Optional number, containing the corrected value.
+  * **correctionFactor**: Optional number, defining the correction factor applied.
+  * **correctionFactorBreakdown**: Optional string, defining the process for obtaining the correction factor.
 * **measurements**: The "measurements" section defines actual data measurements from the "meter". An array of zero or more sets of values.
   * **type**: A required string, referencing a "reading" type that is defined for the "meter". All data measurements supplied for a "meter" *must* use a "reading" "type" that has been defined for the "meter".
   * **timestamp**: RFC 3339 [\[2\]](#2) string, required. The date/time that the "measurement" was produced.
