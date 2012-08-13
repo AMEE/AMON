@@ -85,12 +85,11 @@ The the full AMON data format is shown below. A [full description of the format]
               "unit": optional string,
               "resolution": optional number,
               "accuracy": optional number,
-              "period": required string, currently only "instant" supported,
-              "mode": optional string,
+              "period": required string,
               "min": optional number,
               "max": optional number,
               "correction": optional boolean,
-              "correctedTo": optional number,
+              "correctedUnit": optional string,
               "correctionFactor": optional number,
               "correctionFactorBreakdown": optional string
             },
@@ -168,12 +167,11 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
   * **resolution**: Optional string, defining the resolution of the "reading".
   * **accuracy**: Optional string, defining the accuracy of the "reading".
-  * **period**: Required string, defining the type of "reading". Currently, only "instant" is supported. Readings of type "instant" are readings are from devices that, at a given instant in time, produce a "measurement" (e.g. current temperature, current relative humidity, current number of gas units used, etc.). Other types may be added in the future. Systems that implement the AMON data format should assume a default of "instant" if not supplied.
-  * **mode**: Optional string, defining the capture mode of the data. May be one of "instant", "cumulative" or "pulse".
+  * **period**: Required string, defining the type of "reading". May be one of "instant", "cumulative" or "pulse". Systems that implement the AMON data format should assume a default of "instant" if not supplied.
   * **min**: Optional number, defining the minimum valid value for the data.
   * **max**: Optional number, defining the maximum valid value for the data.
   * **correction**: Optional boolean, defining whether a correction factor has been applied to the data.
-  * **correctedTo**: Optional number, containing the corrected value.
+  * **correctedUnit**: Optional string, containing the corrected unit type.
   * **correctionFactor**: Optional number, defining the correction factor applied.
   * **correctionFactorBreakdown**: Optional string, defining the process for obtaining the correction factor.
 * **measurements**: The "measurements" section defines actual data measurements from the "meter". An array of zero or more sets of values.
@@ -217,19 +215,35 @@ Each of the standard "types" below is listed with a proposed default "reading" "
     <tr><th>Type Name</th><th>Default Unit</th><th>JSON Type</th></tr>
   </thead>
   <tbody>
-    <tr>  <td>electricalInput</td>         <td>kWh</td>      <td>Number</td>   </tr>
-    <tr>  <td>electricalOutput</td>        <td>kWh</td>      <td>Number</td>   </tr>
-    <tr>  <td>electricityConsumption</td>  <td>kWh</td>      <td>Number</td>   </tr>
-    <tr>  <td>electricityExport</td>       <td>kWh</td>      <td>Number</td>   </tr>
-    <tr>  <td>gasAsHeatingFuel</td>        <td>m^3</td>      <td>Number</td>   </tr>
-    <tr>  <td>heatOutput</td>              <td>kWh</td>      <td>Number</td>   </tr>
-    <tr>  <td>humidity</td>                <td>gm^-3</td>    <td>Number</td>   </tr>
-    <tr>  <td>solarRadiation</td>          <td>wm^-2</td>    <td>Number</td>   </tr>
-    <tr>  <td>temperature</td>             <td>C</td>        <td>Number</td>   </tr>
-    <tr>  <td>waterConsumption</td>        <td>L</td>        <td>Number</td>   </tr>
-    <tr>  <td>windDirection</td>           <td>degrees</td>  <td>Number</td>   </tr>
-    <tr>  <td>windSpeed</td>               <td>ms^-1</td>    <td>Number</td>   </tr>
-    <tr>  <td>windowOpen</td>              <td></td>         <td>Boolean</td>  </tr>
+    <tr>  <td>barometricPressure</td>      <td>mbar</td>            <td>Number</td>         </tr>
+    <tr>  <td>co2</td>                     <td>ppm</td>             <td>Number</td>         </tr>
+    <tr>  <td>currentSignal</td>           <td>mA</td>              <td>Number</td>         </tr>
+    <tr>  <td>electricityConsumption</td>  <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>electricityExport</td>       <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>electricityImport</td>       <td>kWh</td>             <td>Number</td>         </tr>    
+    <tr>  <td>flowRateAir</td>             <td>m^3/h</td>           <td>Number</td>         </tr>
+    <tr>  <td>flowRateLiquid</td>          <td>Ls^-1</td>           <td>Number</td>         </tr>
+    <tr>  <td>gasConsumption</td>          <td>m^3, ft^3, kWh</td>  <td>Number</td>         </tr>
+    <tr>  <td>heatConsumption</td>         <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>heatExport</td>              <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>heatGeneration</td>          <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>heatImport</td>              <td>kWh</td>             <td>Number</td>         </tr>
+    <tr>  <td>heatTransferCoefficient</td> <td>W/m^2.K</td>         <td>Number</td>         </tr>
+    <tr>  <td>oilConsumption</td>          <td>m^3, ft^3, kWh</td>  <td>Number</td>         </tr>
+    <tr>  <td>pulseCount</td>              <td></td>                <td>Number</td>         </tr>
+    <tr>  <td>relativeHumidity</td>        <td>%</td>               <td>Number</td>         </tr>
+    <tr>  <td>solarRadiation</td>          <td>W/m^2</td>           <td>Number</td>         </tr>
+    <tr>  <td>status</td>                  <td></td>                <td>Number (0/1)</td>   </tr>
+    <tr>  <td>temperatureAir</td>          <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>temperatureAmbient</td>      <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>temperatureFluid</td>        <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>temperatureGround</td>       <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>temperatureRadiant</td>      <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>temperatureSurface</td>      <td>C</td>               <td>Number</td>         </tr>
+    <tr>  <td>voltageSignal</td>           <td>mV</td>              <td>Number</td>         </tr>
+    <tr>  <td>waterConsumption</td>        <td>L</td>               <td>Number</td>         </tr>
+    <tr>  <td>windDirection</td>           <td>degrees</td>         <td>Number</td>         </tr>
+    <tr>  <td>windSpeed</td>               <td>ms^-1</td>           <td>Number</td>         </tr>
   </tbody>
 </table>
 
@@ -449,6 +463,9 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 
 ### <a name="history"></a>Revision History
 
+* Version 3.0: 
+  * Add some new fields.
+  * Update standard reading types.
 * Version 2.0: 2011-09-12 - Andrew Hill
   * <https://github.com/AMEE/AMON/issues/1>: Added the "description" field to "meters", "meteringPoints" and "entities".
   * <https://github.com/AMEE/AMON/issues/2>: Removed the "duration" reading type, as feedback suggested that this type is not relevant at all to metering/monitoring device manufacturers -- readings are always taken at an instant in time with only a single timestamp available for the reading.
