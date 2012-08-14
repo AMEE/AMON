@@ -253,6 +253,8 @@ Each of the standard "types" below is listed with a proposed default "reading" "
 
 This example shows a "meter", with UUID "d46ec860-fc7d-012c-25a6-0017f2cd3574". 
 
+The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+
 The "meter" has a "location", and has been defined with one "reading". 
 
 Two "measurements" for the defined "reading" exist.
@@ -261,6 +263,7 @@ Two "measurements" for the defined "reading" exist.
       "meters": [
         {
           "meterId": "d46ec860-fc7d-012c-25a6-0017f2cd3574",
+          "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
           "description": "Example 1 Meter",
           "location": {
             "name": "kitchen"
@@ -292,6 +295,8 @@ Two "measurements" for the defined "reading" exist.
 
 This example shows a "meter", with UUID "c1810810-0381-012d-25a8-0017f2cd3574", as well as a "meteringPoint" with UUID "c1759810-90f3-012e-0404-34159e211070".
 
+The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+
 The "meter" belongs to the "meteringPoint", and has been defined with two "readings". 
 
 One "measurements" for each of the defined "readings" exist.
@@ -300,6 +305,7 @@ One "measurements" for each of the defined "readings" exist.
       "meters": [
         {
           "meterId": "c1810810-0381-012d-25a8-0017f2cd3574",
+          "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
           "description": "Example 2 Meter",
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
           "readings": [
@@ -340,6 +346,8 @@ One "measurements" for each of the defined "readings" exist.
 
 This example shows two "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574" and the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574".
 
+The meters are associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+
 The first "meter" has been defined with three different "readings", and one "measurements" for each of the defined "readings" exist.
 
 The second "meter" has been defined with one "reading", and one "measurements" for that "readings" exists.
@@ -348,6 +356,7 @@ The second "meter" has been defined with one "reading", and one "measurements" f
       "meters": [
         {
           "meterId": "82621440-fc7f-012c-25a6-0017f2cd3574",
+          "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
           "description": "Example 3 Meter #1",
           "readings": [
             {
@@ -380,6 +389,7 @@ The second "meter" has been defined with one "reading", and one "measurements" f
         },
         {
           "meterId": "d1635430-0381-012d-25a8-0017f2cd3574",
+          "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
           "description": "Example 3 Meter #2",
           "readings": [
             {
@@ -423,12 +433,15 @@ The entity is defined as being associated with two "meters", those with UUIDs "c
 
 This example shows a "meter", with UUID "ed221bf0-d075-012d-287e-0017f2cd3574".
 
+The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+
 The "meter" has been defined with one "reading", and two "measurements" for that "readings" exists. Note, however, that the "value" of the "measurements" in this case are boolean values.
 
     {
       "meters": [
         {
           "meterId": "ed221bf0-d075-012d-287e-0017f2cd3574",
+          "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
           "description": "Example 5 Meter",
           "readings": [
             {
