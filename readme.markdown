@@ -133,9 +133,9 @@ The AMON data format describes metering/monitoring devices, their data, and thei
 
 The AMON data format consists of three main sections:
 
-* **meters**: The "meters" section is used for representing physical or virtual metering/monitoring devices and their data;
+* **devices**: The "devices" section is used for representing physical or virtual metering/monitoring devices and their data;
 * **meteringPoints**: The "meteringPoints" section is used for representing physical or virtual *metering points* -- that is, physical or virtual points where metering/monitoring is performed (perhaps for billing purposes) but which is desired to be kept separate from a physical or virtual metering/monitoring devices (e.g. so that if a device fails, and needs to be replaced, the "meteringPoint" can remain, and a new "meter" can be added to replace the old "meter"); or a physical or virtual collection of metering/monitoring devices with a related purpose (e.g. an electrical metering system as a "meteringPoint" with a number of sub-"meters").
-* **entities**: The "entities" section is used for representing real world or virtual *entities* that may relate to "meters" and/or "meteringPoints", such as businesses, properties, buildings, people, universities -- anything, really, that may have a 1:n relationship with "meters" and/or "meteringPoints".
+* **entities**: The "entities" section is used for representing real world or virtual *entities* that may relate to "devices" and/or "meteringPoints", such as businesses, properties, buildings, people, universities -- anything, really, that may have a 1:n relationship with "devices" and/or "meteringPoints".
 
 ### <a name="UUIDs"></a>UUIDs
 
@@ -145,14 +145,14 @@ Where a string UUID is defined in the data format, a standard Universally Unique
 
 Where a number is defined in the data format, positive and negative integers and floating point numbers are acceptable. Numbers may be defined in either normal numeric or scientific notation. (It is left up to the implementation of devices/systems that use AMON regarding the precision of floating point numbers.)
 
-### <a name="meters"></a>Meters
+### <a name="devices"></a>Devices
 
-In the AMON data format, the "meters" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "meter", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
+In the AMON data format, the "devices" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "meter", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
 
-All of the fields for the "meters" section of the AMON data format are discussed in more detail below.
+All of the fields for the "devices" section of the AMON data format are discussed in more detail below.
 
-* **meterId**: A UUID for the "meter". Required for a "meter"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meter" be created. 
-* **parentId**: A UUID for the meter's "parent". Presence of this value indicates this meter is a sub-meter.
+* **deviceId**: A UUID for the "device". Required for a "device"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "device" be created. 
+* **parentId**: A UUID for the device's "parent". Presence of this value indicates this meter is a sub-meter.
 * **description**: An optional textual description of the meter. Commonly used for an in-house meter ID and/or other useful identifier.
 * **meteringPointId**: An optional UUID of a "meteringPoint", if this "meter" is to be considered part of that "meteringPoint".
 * **privacy**: Should the information about this meter/monitor and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
@@ -166,15 +166,15 @@ All of the fields for the "meters" section of the AMON data format are discussed
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
   * **resolution**: Optional string, defining the resolution of the "reading".
   * **accuracy**: Optional string, defining the accuracy of the "reading".
-  * **period**: Required string, defining the type of "reading". May be one of "instant", "cumulative" or "pulse". Systems that implement the AMON data format should assume a default of "instant" if not supplied.
+  * **period**: Required string, defining the type of "reading". May be one of "INSTANT", "CUMULATIVE" or "PULSE". Systems that implement the AMON data format should assume a default of "INSTANT" if not supplied.
   * **min**: Optional number, defining the minimum valid value for the data.
   * **max**: Optional number, defining the maximum valid value for the data.
   * **correction**: Optional boolean, defining whether a correction factor has been applied to the data.
   * **correctedUnit**: Optional string, containing the corrected unit type.
   * **correctionFactor**: Optional number, defining the correction factor applied.
   * **correctionFactorBreakdown**: Optional string, defining the process for obtaining the correction factor.
-* **measurements**: The "measurements" section defines actual data measurements from the "meter". An array of zero or more sets of values.
-  * **type**: A required string, referencing a "reading" type that is defined for the "meter". All data measurements supplied for a "meter" *must* use a "reading" "type" that has been defined for the "meter".
+* **measurements**: The "measurements" section defines actual data measurements from the "device". An array of zero or more sets of values.
+  * **type**: A required string, referencing a "reading" type that is defined for the "device". All data measurements supplied for a "device" *must* use a "reading" "type" that has been defined for the "device".
   * **timestamp**: RFC 3339 [\[2\]](#2) string, required. The date/time that the "measurement" was produced.
   * **value**: Optional number, boolean or string, being the actual "measurement" value.
   * **error**: Optional string, describing an error condition if no "value" is present.
@@ -182,7 +182,7 @@ All of the fields for the "meters" section of the AMON data format are discussed
 
 ### <a name="metering_points"></a>Metering Points
 
-In the AMON data format, the "meteringPoints" section is used to represent physical or virtual metering points. Note that because the relationship between a "meter" and a "meteringPoint" is defined in the "meter" section of the data format, a "meteringPoint" may have one or more "meters"; but a "meter" may belong to at most one "meteringPoint".
+In the AMON data format, the "meteringPoints" section is used to represent physical or virtual metering points. Note that because the relationship between a "device" and a "meteringPoint" is defined in the "device" section of the data format, a "meteringPoint" may have one or more "devices"; but a "device" may belong to at most one "meteringPoint".
 
 All of the fields for the "meteringPoints" section of the AMON data format are discussed in more detail below.
 
@@ -197,17 +197,16 @@ In the AMON data format, the "entities" section is used to represent physical or
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
 * **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created. 
-* **description**: An optional textual description of the entity.
-* **meterIds**: An array of "meter" UUIDs, representing the "meters" that belong to the "entity".
+* **deviceIds**: An array of "meter" UUIDs, representing the "devices" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
 ### <a name="reading_types"></a>Standard Reading Types
 
-All "meters" in the AMON data format must, in order to be able to describe/exchange metering/monitoring data, define "readings", to which "measurements" can then be associated via the defined "type".
+All "devices" in the AMON data format must, in order to be able to describe/exchange metering/monitoring data, define "readings", to which "measurements" can then be associated via the defined "type".
 
 As mentioned above, the AMON data format does not specify any requirement regarding what "reading" "types" must be. However, the following table represents "types" that are commonly used in the metering/monitoring field. If a "type" exists in the following table, it is recommended that this be used when using the data format, as this will improve the ability to interchange AMON formatted data between different systems.
 
-Each of the standard "types" below is listed with a proposed default "reading" "unit", which systems implementing AMON should use in the event that no unit is defined in a "meter" "reading" section for that "type".
+Each of the standard "types" below is listed with a proposed default "reading" "unit", which systems implementing AMON should use in the event that no unit is defined in a "device" "reading" section for that "type".
 
 <table>
   <thead>
@@ -476,9 +475,10 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 ### <a name="history"></a>Revision History
 
 * Version 3.0: 
-  * Change Meters to Devices.
-  * Add some new fields.
-  * Update standard reading types.
+  * Changed Meters to Devices.
+  * Added some new fields.
+  * Updated standard reading types.
+  * Removed 'description' property from entity.
 * Version 2.0: 2011-09-12 - Andrew Hill
   * <https://github.com/AMEE/AMON/issues/1>: Added the "description" field to "meters", "meteringPoints" and "entities".
   * <https://github.com/AMEE/AMON/issues/2>: Removed the "duration" reading type, as feedback suggested that this type is not relevant at all to metering/monitoring device manufacturers -- readings are always taken at an instant in time with only a single timestamp available for the reading.
