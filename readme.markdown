@@ -120,7 +120,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "entities": [
         {
           "entityId": required string UUID,
-          "meterIds": [ optional array of string UUIDs, empty array permitted ],
+          "deviceIds": [ optional array of string UUIDs, empty array permitted ],
           "meteringPointIds": [ optional array of string UUIDs, empty array permitted ]
         }
       ]
@@ -134,7 +134,7 @@ The AMON data format describes metering/monitoring devices, their data, and thei
 The AMON data format consists of three main sections:
 
 * **devices**: The "devices" section is used for representing physical or virtual metering/monitoring devices and their data;
-* **meteringPoints**: The "meteringPoints" section is used for representing physical or virtual *metering points* -- that is, physical or virtual points where metering/monitoring is performed (perhaps for billing purposes) but which is desired to be kept separate from a physical or virtual metering/monitoring devices (e.g. so that if a device fails, and needs to be replaced, the "meteringPoint" can remain, and a new "meter" can be added to replace the old "meter"); or a physical or virtual collection of metering/monitoring devices with a related purpose (e.g. an electrical metering system as a "meteringPoint" with a number of sub-"meters").
+* **meteringPoints**: The "meteringPoints" section is used for representing physical or virtual *metering points* -- that is, physical or virtual points where metering/monitoring is performed (perhaps for billing purposes) but which is desired to be kept separate from a physical or virtual metering/monitoring devices (e.g. so that if a device fails, and needs to be replaced, the "meteringPoint" can remain, and a new "device" can be added to replace the old "device"); or a physical or virtual collection of metering/monitoring devices with a related purpose (e.g. an electrical metering system as a "meteringPoint" with a number of sub-"meters").
 * **entities**: The "entities" section is used for representing real world or virtual *entities* that may relate to "devices" and/or "meteringPoints", such as businesses, properties, buildings, people, universities -- anything, really, that may have a 1:n relationship with "devices" and/or "meteringPoints".
 
 ### <a name="UUIDs"></a>UUIDs
@@ -147,21 +147,21 @@ Where a number is defined in the data format, positive and negative integers and
 
 ### <a name="devices"></a>Devices
 
-In the AMON data format, the "devices" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "meter", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
+In the AMON data format, the "devices" section is used to represent physical or virtual metering/monitoring devices and their data. This is done via three sub-sections. Firstly, a series of fields that define details about the physical or virtual device itself, such as a UUID for the "device", if the device's data should be considered to be public or private, the location of the device, and optional metadata about the device. Secondly, a series of fields (the "readings" section) which defines *what* the device records measurements of -- so, for example, if a device monitors temperature and relative humidity, then the "readings" section would define this. Finally, a series of fields (the "measurements" section) which defines actual metering/monitoring data from the device.
 
 All of the fields for the "devices" section of the AMON data format are discussed in more detail below.
 
 * **deviceId**: A UUID for the "device". Required for a "device"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "device" be created. 
-* **parentId**: A UUID for the device's "parent". Presence of this value indicates this meter is a sub-meter.
-* **description**: An optional textual description of the meter. Commonly used for an in-house meter ID and/or other useful identifier.
-* **meteringPointId**: An optional UUID of a "meteringPoint", if this "meter" is to be considered part of that "meteringPoint".
-* **privacy**: Should the information about this meter/monitor and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
+* **parentId**: A UUID for the device's "parent". Presence of this value indicates this device is a sub-meter.
+* **description**: An optional textual description of the device. Commonly used for an in-house device ID and/or other useful identifier.
+* **meteringPointId**: An optional UUID of a "meteringPoint", if this "device" is to be considered part of that "meteringPoint".
+* **privacy**: Should the information about this device and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
 * **location**: 
-  * **name**: Optional textual description of the location of the "meter".
-  * **latitude**: Optional latitude of the "meter".
-  * **longitude**: Optional longitude of the "meter".
-* **metadata**: An optional JSON object of metadata about the "meter". This allows the AMON data format to handle any type of metadata relating to the "meter".
-* **readings**: The "readings" section defines what type of readings the "meter" validly produces. An array of zero or more sets of values.
+  * **name**: Optional textual description of the location of the "device".
+  * **latitude**: Optional latitude of the "device".
+  * **longitude**: Optional longitude of the "device".
+* **metadata**: An optional JSON object of metadata about the "device". This allows the AMON data format to handle any type of metadata relating to the "device".
+* **readings**: The "readings" section defines what type of readings the "device" validly produces. An array of zero or more sets of values.
   * **type**: A required string, defining a name for the type of "reading". A set of [standard reading types](#reading_types) is listed below; however, the AMON data format does not specify any requirement regarding reading types. While it is recommended that the standard reading types be used, users of the data format are free to define and use their own type definitions, as appropriate to their devices and data.
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
   * **resolution**: Optional string, defining the resolution of the "reading".
@@ -188,16 +188,16 @@ All of the fields for the "meteringPoints" section of the AMON data format are d
 
 * **meteringPointId**: A UUID for the "meteringPoint". Required for a "meteringPoint"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "meteringPoint" be created.
 * **description**: An optional textual description of the metering point.
-* **metadata**: An optional JSON object of metadata about the "meteringPoint". This allows the AMON data format to handle any type of metadata relating to the "meter".
+* **metadata**: An optional JSON object of metadata about the "meteringPoint". This allows the AMON data format to handle any type of metadata relating to the "device".
 
 ### <a name="entities"></a>Entities
 
-In the AMON data format, the "entities" section is used to represent physical or virtual entities which may have a relationship with a "meter" or "meteringPoint".
+In the AMON data format, the "entities" section is used to represent physical or virtual entities which may have a relationship with a "device" or "meteringPoint".
 
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
 * **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created. 
-* **deviceIds**: An array of "meter" UUIDs, representing the "devices" that belong to the "entity".
+* **deviceIds**: An array of "device" UUIDs, representing the "devices" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
 ### <a name="reading_types"></a>Standard Reading Types
@@ -249,20 +249,20 @@ Each of the standard "types" below is listed with a proposed default "reading" "
   
 ### Example 1 - Temperature readings
 
-This example shows a "meter", with UUID "d46ec860-fc7d-012c-25a6-0017f2cd3574". 
+This example shows a "device", with UUID "d46ec860-fc7d-012c-25a6-0017f2cd3574". 
 
-The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+The device is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The "meter" has a "location", and has been defined with one "reading". 
+The "device" has a "location", and has been defined with one "reading". 
 
 Two "measurements" for the defined "reading" exist.
 
     {
-      "meters": [
+      "devices": [
         {
-          "meterId": "d46ec860-fc7d-012c-25a6-0017f2cd3574",
+          "deviceId": "d46ec860-fc7d-012c-25a6-0017f2cd3574",
           "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
-          "description": "Example 1 Meter",
+          "description": "Example 1 Device",
           "location": {
             "name": "kitchen"
           },
@@ -291,20 +291,20 @@ Two "measurements" for the defined "reading" exist.
 
 ### Example 2 - Electricity readings with associated metering point
 
-This example shows a "meter", with UUID "c1810810-0381-012d-25a8-0017f2cd3574", as well as a "meteringPoint" with UUID "c1759810-90f3-012e-0404-34159e211070".
+This example shows a "device", with UUID "c1810810-0381-012d-25a8-0017f2cd3574", as well as a "meteringPoint" with UUID "c1759810-90f3-012e-0404-34159e211070".
 
-The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+The device is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The "meter" belongs to the "meteringPoint", and has been defined with two "readings". 
+The "device" belongs to the "meteringPoint", and has been defined with two "readings". 
 
 One "measurements" for each of the defined "readings" exist.
 
     {
-      "meters": [
+      "devices": [
         {
-          "meterId": "c1810810-0381-012d-25a8-0017f2cd3574",
+          "deviceId": "c1810810-0381-012d-25a8-0017f2cd3574",
           "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
-          "description": "Example 2 Meter",
+          "description": "Example 2 Device",
           "meteringPointId": "c1759810-90f3-012e-0404-34159e211070",
           "readings": [
             {
@@ -342,20 +342,20 @@ One "measurements" for each of the defined "readings" exist.
 
 ### Example 3 - Wind turbine measurements
 
-This example shows two "meters", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574" and the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574".
+This example shows two "devices", the first with UUID "82621440-fc7f-012c-25a6-0017f2cd3574" and the second with UUID "d1635430-0381-012d-25a8-0017f2cd3574".
 
-The meters are associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+The devices are associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The first "meter" has been defined with three different "readings", and one "measurements" for each of the defined "readings" exist.
+The first "device" has been defined with three different "readings", and one "measurements" for each of the defined "readings" exist.
 
-The second "meter" has been defined with one "reading", and one "measurements" for that "readings" exists.
+The second "device" has been defined with one "reading", and one "measurements" for that "readings" exists.
 
     {
-      "meters": [
+      "devices": [
         {
-          "meterId": "82621440-fc7f-012c-25a6-0017f2cd3574",
+          "deviceId": "82621440-fc7f-012c-25a6-0017f2cd3574",
           "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
-          "description": "Example 3 Meter #1",
+          "description": "Example 3 Device #1",
           "readings": [
             {
               "type": "electricalInput"
@@ -386,9 +386,9 @@ The second "meter" has been defined with one "reading", and one "measurements" f
           ]
         },
         {
-          "meterId": "d1635430-0381-012d-25a8-0017f2cd3574",
+          "deviceId": "d1635430-0381-012d-25a8-0017f2cd3574",
           "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
-          "description": "Example 3 Meter #2",
+          "description": "Example 3 Device #2",
           "readings": [
             {
               "type": "windDirection"
@@ -405,18 +405,18 @@ The second "meter" has been defined with one "reading", and one "measurements" f
       ]
     }
 
-### Example 4 - Associating meters and metering points with an entity
+### Example 4 - Associating devices and metering points with an entity
 
 This example shows an "entity", with UUID "0636240-0381-012d-25a8-0017f2cd3574". 
 
-The entity is defined as being associated with two "meters", those with UUIDs "c1810810-0381-012d-25a8-0017f2cd3574" and "d46ec860-fc7d-012c-25a6-0017f2cd3574", and also with one "meteringPoint", with UUID "c1759810-90f3-012e-0404-34159e211070".
+The entity is defined as being associated with two "devices", those with UUIDs "c1810810-0381-012d-25a8-0017f2cd3574" and "d46ec860-fc7d-012c-25a6-0017f2cd3574", and also with one "meteringPoint", with UUID "c1759810-90f3-012e-0404-34159e211070".
 
     {
       "entities": [
         {
           "entityId": "90636240-0381-012d-25a8-0017f2cd3574",
           "description": "Example 4 Entity",
-          "meterIds": [
+          "deviceIds": [
             "c1810810-0381-012d-25a8-0017f2cd3574",
             "d46ec860-fc7d-012c-25a6-0017f2cd3574"
           ],
@@ -429,18 +429,18 @@ The entity is defined as being associated with two "meters", those with UUIDs "c
 
 ### Example 5 - Non-numeric measurements
 
-This example shows a "meter", with UUID "ed221bf0-d075-012d-287e-0017f2cd3574".
+This example shows a "device", with UUID "ed221bf0-d075-012d-287e-0017f2cd3574".
 
-The meter is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
+The device is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The "meter" has been defined with one "reading", and two "measurements" for that "readings" exists. Note, however, that the "value" of the "measurements" in this case are boolean values.
+The "device" has been defined with one "reading", and two "measurements" for that "readings" exists. Note, however, that the "value" of the "measurements" in this case are boolean values.
 
     {
-      "meters": [
+      "devices": [
         {
-          "meterId": "ed221bf0-d075-012d-287e-0017f2cd3574",
+          "deviceId": "ed221bf0-d075-012d-287e-0017f2cd3574",
           "entityId": "50af27e0-e61a-11e1-aff1-0800200c9a66",
-          "description": "Example 5 Meter",
+          "description": "Example 5 Device",
           "readings": [
             {
               "type": "windowOpen"
