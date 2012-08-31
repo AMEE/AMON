@@ -1,4 +1,4 @@
-# AMON v2.0
+# AMON v3.0
 
 ## <a name="copyright"></a>Copyright
 
@@ -29,7 +29,7 @@ The AMON standard is licensed under a [Creative Commons Attribution 2.0 UK: Engl
   * [Data Format Description](#description)
   * [UUIDs](#UUIDs)
   * [Numbers](#numbers)
-  * [Meters](#meters)
+  * [Devices](#devices)
   * [Metering Points](#metering_points)
   * [Entities](#entities)
   * [Standard Reading Types](#reading_types)
@@ -63,13 +63,13 @@ The the full AMON data format is shown below. A [full description of the format]
 
     {
 
-      "meters": [
+      "devices": [
         {
-          "meterId": required string UUID,
+          "deviceId": required string UUID,
+          "entityId": required string UUID,
           "parentId": optional string UUID,
-          "entityId": optional string UUID,
-          "description": optional string,
           "meteringPointId": optional string UUID,
+          "description": optional string,
           "privacy": required string, either "private" or "public",
           "location": {
             "name": optional string,
@@ -85,7 +85,7 @@ The the full AMON data format is shown below. A [full description of the format]
               "unit": optional string,
               "resolution": optional number,
               "accuracy": optional number,
-              "period": required string,
+              "period": required string, either "INSTANT", "CUMULATIVE" or "PULSE",
               "min": optional number,
               "max": optional number,
               "correction": optional boolean,
@@ -96,8 +96,8 @@ The the full AMON data format is shown below. A [full description of the format]
           ],
           "measurements": [
             {
-              "type": required string,
-              "timestamp": RFC 3339 string, required,
+              "type": required string, must match a defined reading type,
+              "timestamp": required RFC 3339 string,
               "value": number, boolean or string, required unless "error" (below) is present,
               "error": string, required unless "value" (above) is present,
               "aggregated": optional boolean
@@ -109,7 +109,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "meteringPoints": [
         {
           "meteringPointId": required string UUID,
-          "entityId": options string UUID,
+          "entityId": required string UUID,
           "description": optional string,
           "metadata": {
             optional JSON object
@@ -120,8 +120,7 @@ The the full AMON data format is shown below. A [full description of the format]
       "entities": [
         {
           "entityId": required string UUID,
-          "description": optional string,
-          "meterIds": [ required array of string UUIDs, empty array permitted ],
+          "meterIds": [ optional array of string UUIDs, empty array permitted ],
           "meteringPointIds": [ optional array of string UUIDs, empty array permitted ]
         }
       ]
@@ -477,6 +476,7 @@ The "meter" has been defined with one "reading", and two "measurements" for that
 ### <a name="history"></a>Revision History
 
 * Version 3.0: 
+  * Change Meters to Devices.
   * Add some new fields.
   * Update standard reading types.
 * Version 2.0: 2011-09-12 - Andrew Hill
