@@ -164,8 +164,8 @@ All of the fields for the "devices" section of the AMON data format are discusse
 * **readings**: The "readings" section defines what type of readings the "device" validly produces. An array of zero or more sets of values.
   * **type**: A required string, defining a name for the type of "reading". A set of [standard reading types](#reading_types) is listed below; however, the AMON data format does not specify any requirement regarding reading types. While it is recommended that the standard reading types be used, users of the data format are free to define and use their own type definitions, as appropriate to their devices and data.
   * **unit**: Optional string, defining the unit for the "reading". Units must be a valid unit as defined by the JScience library. [\[3\]](#3) [\[4\]](#4)
-  * **resolution**: Optional string, defining the resolution of the "reading".
-  * **accuracy**: Optional string, defining the accuracy of the "reading".
+  * **resolution**: Optional number, defining the number of seconds between each expected measurement.
+  * **accuracy**: Optional number, defining the accuracy of the "reading".
   * **period**: Required string, defining the type of "reading". May be one of "INSTANT", "CUMULATIVE" or "PULSE". Systems that implement the AMON data format should assume a default of "INSTANT" if not supplied.
   * **min**: Optional number, defining the minimum valid value for the data.
   * **max**: Optional number, defining the maximum valid value for the data.
