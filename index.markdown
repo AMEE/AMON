@@ -3,7 +3,7 @@ title: AMON Data Format
 layout: default
 ---
 
-# AMON v3.0
+# AMON v3.1
 
 ## <a name="copyright"></a>Copyright
 
@@ -21,7 +21,7 @@ AMEE has developed a storage platform for metering/monitoring device data and a 
 
 ## <a name="license"></a>License
 
-The AMON standard is licensed under a [Creative Commons Attribution 2.0 UK: England & Wales License](http://creativecommons.org/licenses/by/2.0/uk/). 
+The AMON standard is licensed under a [Creative Commons Attribution 2.0 UK: England & Wales License](http://creativecommons.org/licenses/by/2.0/uk/).
 
 ## <a name="toc"></a>Table of Contents
 
@@ -53,12 +53,12 @@ The AMON data format has been developed with the following goals in mind:
 * To be human readable and self-documenting;
 * To be able to be widely supported;
 * To be bandwidth sensitive;
-* To be simple; and 
+* To be simple; and
 * To be extensible, easily supporting new data types.
 
 To this end:
 
-* The data format defines a number of commonly used data fields for devices (such as the device name, its location etc.), and a number of commonly used data fields for device readings. This ensures that the data format is suitable for the description and exchange of metering/monitoring device data and is simple to use. 
+* The data format defines a number of commonly used data fields for devices (such as the device name, its location etc.), and a number of commonly used data fields for device readings. This ensures that the data format is suitable for the description and exchange of metering/monitoring device data and is simple to use.
 * The data format uses JSON encoding [\[1\]](#1). This ensures that the data format balances the need to be human readable and self-documenting against the need to be bandwidth sensitive. Additionally, as most languages have library support for JSON encoding, AMON is able to be widely supported.
 * Finally, although the data format does define commonly used data fields for devices and device readings, it does not exclude the use of custom device data or reading data. These can be described and exchanged using the AMON data format without modification to the data format, ensuring that the format is extensible.
 
@@ -83,7 +83,7 @@ The the full AMON data format is shown below. A [full description of the format]
           },
           "metadata": {
             optional JSON object
-          },      
+          },
           "readings": [
             {
               "type": required string,
@@ -107,7 +107,7 @@ The the full AMON data format is shown below. A [full description of the format]
               "error": string, required unless "value" (above) is present,
               "aggregated": optional boolean
             },
-          ]    
+          ]
         }
       ],
 
@@ -119,7 +119,7 @@ The the full AMON data format is shown below. A [full description of the format]
           "metadata": {
             optional JSON object
           }
-        }    
+        }
       ],
 
       "entities": [
@@ -156,12 +156,12 @@ In the AMON data format, the "devices" section is used to represent physical or 
 
 All of the fields for the "devices" section of the AMON data format are discussed in more detail below.
 
-* **deviceId**: A UUID for the "device". Required for a "device"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "device" be created. 
+* **deviceId**: A UUID for the "device". Required for a "device"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting that a "device" be created.
 * **parentId**: A UUID for the device's "parent". Presence of this value indicates this device is a sub-meter.
 * **description**: An optional textual description of the device. Commonly used for an in-house device ID and/or other useful identifier.
 * **meteringPointId**: An optional UUID of a "meteringPoint", if this "device" is to be considered part of that "meteringPoint".
 * **privacy**: Should the information about this device and its data be considered private, or public? Optional -- systems that implement the AMON data format should assume a default of "private" if not specified.
-* **location**: 
+* **location**:
   * **name**: Optional textual description of the location of the "device".
   * **latitude**: Optional latitude of the "device".
   * **longitude**: Optional longitude of the "device".
@@ -201,7 +201,7 @@ In the AMON data format, the "entities" section is used to represent physical or
 
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
-* **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created. 
+* **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created.
 * **deviceIds**: An array of "device" UUIDs, representing the "devices" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
@@ -218,47 +218,61 @@ Each of the standard "types" below is listed with a proposed default "reading" "
     <tr><th>Type Name</th><th>Default Unit</th><th>JSON Type</th></tr>
   </thead>
   <tbody>
-    <tr>  <td>barometricPressure</td>      <td>mbar</td>            <td>Number</td>         </tr>
-    <tr>  <td>co2</td>                     <td>ppm</td>             <td>Number</td>         </tr>
-    <tr>  <td>currentSignal</td>           <td>mA</td>              <td>Number</td>         </tr>
-    <tr>  <td>electricityConsumption</td>  <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>electricityExport</td>       <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>electricityImport</td>       <td>kWh</td>             <td>Number</td>         </tr>    
-    <tr>  <td>flowRateAir</td>             <td>m^3/h</td>           <td>Number</td>         </tr>
-    <tr>  <td>flowRateLiquid</td>          <td>Ls^-1</td>           <td>Number</td>         </tr>
-    <tr>  <td>gasConsumption</td>          <td>m^3, ft^3, kWh</td>  <td>Number</td>         </tr>
-    <tr>  <td>heatConsumption</td>         <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>heatExport</td>              <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>heatGeneration</td>          <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>heatImport</td>              <td>kWh</td>             <td>Number</td>         </tr>
-    <tr>  <td>heatTransferCoefficient</td> <td>W/m^2.K</td>         <td>Number</td>         </tr>
-    <tr>  <td>oilConsumption</td>          <td>m^3, ft^3, kWh</td>  <td>Number</td>         </tr>
-    <tr>  <td>pulseCount</td>              <td></td>                <td>Number</td>         </tr>
-    <tr>  <td>relativeHumidity</td>        <td>%</td>               <td>Number</td>         </tr>
-    <tr>  <td>solarRadiation</td>          <td>W/m^2</td>           <td>Number</td>         </tr>
-    <tr>  <td>status</td>                  <td></td>                <td>Number (0/1)</td>   </tr>
-    <tr>  <td>temperatureAir</td>          <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>temperatureAmbient</td>      <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>temperatureFluid</td>        <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>temperatureGround</td>       <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>temperatureRadiant</td>      <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>temperatureSurface</td>      <td>C</td>               <td>Number</td>         </tr>
-    <tr>  <td>voltageSignal</td>           <td>mV</td>              <td>Number</td>         </tr>
-    <tr>  <td>waterConsumption</td>        <td>L</td>               <td>Number</td>         </tr>
-    <tr>  <td>windDirection</td>           <td>degrees</td>         <td>Number</td>         </tr>
-    <tr>  <td>windSpeed</td>               <td>ms^-1</td>           <td>Number</td>         </tr>
+    <tr>  <td>absoluteHumidity</td>             <td>g/Kg</td>             <td>Number</td>         </tr>
+    <tr>  <td>barometricPressure</td>           <td>mbar</td>             <td>Number</td>         </tr>
+    <tr>  <td>co2</td>                          <td>ppm</td>              <td>Number</td>         </tr>
+    <tr>  <td>currentSignal</td>                <td>mA</td>               <td>Number</td>         </tr>
+    <tr>  <td>electricityAmps</td>              <td>Amps</td>             <td>Number</td>         </tr>
+    <tr>  <td>electricityConsumption</td>       <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>electricityExport</td>            <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>electricityFrequency</td>         <td>Hz</td>               <td>Number</td>         </tr>
+    <tr>  <td>electricityGeneration</td>        <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>electricityImport</td>            <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>electricityKiloVoltAmpHours</td>  <td>kVArh</td>            <td>Number</td>         </tr>
+    <tr>  <td>electricityKiloWatts</td>         <td>kW</td>               <td>Number</td>         </tr>
+    <tr>  <td>electricityVolts</td>             <td>V</td>                <td>Number</td>         </tr>
+    <tr>  <td>electricityVoltAmps</td>          <td>VA</td>               <td>Number</td>         </tr>
+    <tr>  <td>electricityVoltAmpsReactive</td>  <td>VAr</td>              <td>Number</td>         </tr>
+    <tr>  <td>flowRateAir</td>                  <td>m^3/h</td>            <td>Number</td>         </tr>
+    <tr>  <td>flowRateLiquid</td>               <td>Ls^-1</td>            <td>Number</td>         </tr>
+    <tr>  <td>gasConsumption</td>               <td>m^3, ft^3, kWh</td>   <td>Number</td>         </tr>
+    <tr>  <td>heatConsumption</td>              <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>heatExport</td>                   <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>heatGeneration</td>               <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>heatImport</td>                   <td>kWh</td>              <td>Number</td>         </tr>
+    <tr>  <td>heatTransferCoefficient</td>      <td>W/m^2.K</td>          <td>Number</td>         </tr>
+    <tr>  <td>liquidFlowRate</td>               <td>Litres/5min</td>      <td>Number</td>         </tr>
+    <tr>  <td>oilConsumption</td>               <td>m^3, ft^3, kWh</td>   <td>Number</td>         </tr>
+    <tr>  <td>powerFactor</td>                  <td></td>                 <td>Number (0-1)</td>   </tr>
+    <tr>  <td>pulseCount</td>                   <td></td>                 <td>Number</td>         </tr>
+    <tr>  <td>relativeHumidity</td>             <td>%RH</td>              <td>Number</td>         </tr>
+    <tr>  <td>relativeHumidity</td>             <td>wm-2</td>             <td>Number</td>         </tr>
+    <tr>  <td>solarRadiation</td>               <td>W/m^2</td>            <td>Number</td>         </tr>
+    <tr>  <td>status</td>                       <td></td>                 <td>Number (0/1)</td>   </tr>
+    <tr>  <td>temperatureAir</td>               <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>temperatureAmbient</td>           <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>temperatureFluid</td>             <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>temperatureGround</td>            <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>temperatureRadiant</td>           <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>temperatureSurface</td>           <td>C</td>                <td>Number</td>         </tr>
+    <tr>  <td>thermalEnergy</td>                <td>kWhth</td>            <td>Number</td>         </tr>
+    <tr>  <td>time</td>                         <td>millisecs</td>        <td>Number</td>         </tr>
+    <tr>  <td>voltageSignal</td>                <td>mV</td>               <td>Number</td>         </tr>
+    <tr>  <td>waterConsumption</td>             <td>L</td>                <td>Number</td>         </tr>
+    <tr>  <td>windDirection</td>                <td>degrees</td>          <td>Number</td>         </tr>
+    <tr>  <td>windSpeed</td>                    <td>ms^-1</td>            <td>Number</td>         </tr>
   </tbody>
 </table>
 
 ##  <a name="examples"></a>Data Examples
-  
+
 ### Example 1 - Temperature readings
 
-This example shows a "device", with UUID "d46ec860-fc7d-012c-25a6-0017f2cd3574". 
+This example shows a "device", with UUID "d46ec860-fc7d-012c-25a6-0017f2cd3574".
 
 The device is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The "device" has a "location", and has been defined with one "reading". 
+The "device" has a "location", and has been defined with one "reading".
 
 Two "measurements" for the defined "reading" exist.
 
@@ -300,7 +314,7 @@ This example shows a "device", with UUID "c1810810-0381-012d-25a8-0017f2cd3574",
 
 The device is associated with the entity with UUID "50af27e0-e61a-11e1-aff1-0800200c9a66".
 
-The "device" belongs to the "meteringPoint", and has been defined with two "readings". 
+The "device" belongs to the "meteringPoint", and has been defined with two "readings".
 
 One "measurements" for each of the defined "readings" exist.
 
@@ -412,7 +426,7 @@ The second "device" has been defined with one "reading", and one "measurements" 
 
 ### Example 4 - Associating devices and metering points with an entity
 
-This example shows an "entity", with UUID "0636240-0381-012d-25a8-0017f2cd3574". 
+This example shows an "entity", with UUID "0636240-0381-012d-25a8-0017f2cd3574".
 
 The entity is defined as being associated with two "devices", those with UUIDs "c1810810-0381-012d-25a8-0017f2cd3574" and "d46ec860-fc7d-012c-25a6-0017f2cd3574", and also with one "meteringPoint", with UUID "c1759810-90f3-012e-0404-34159e211070".
 
@@ -479,7 +493,13 @@ The "device" has been defined with one "reading", and two "measurements" for tha
 
 ### <a name="history"></a>Revision History
 
-* Version 3.0: 
+<<<<<<< HEAD
+* Version 3.0:
+=======
+* Version 3.1:
+  * Updated standard reading types.
+* Version 3.0:
+>>>>>>> a32fd12... Update standard reading types. MM-749
   * Changed Meters to Devices.
   * Added some new fields.
   * Updated standard reading types.
