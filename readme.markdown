@@ -109,7 +109,6 @@ The the full AMON data format is shown below. A [full description of the format]
       "meteringPoints": [
         {
           "meteringPointId": required string UUID,
-          "entityId": required string UUID,
           "description": optional string,
           "metadata": {
             optional JSON object
