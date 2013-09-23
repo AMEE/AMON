@@ -121,7 +121,8 @@ The the full AMON data format is shown below. A [full description of the format]
         {
           "entityId": required string UUID,
           "deviceIds": [ optional array of string UUIDs, empty array permitted ],
-          "meteringPointIds": [ optional array of string UUIDs, empty array permitted ]
+          "meteringPointIds": [ optional array of string UUIDs, empty array permitted ],
+          "description": optional string,
         }
       ]
 
@@ -197,6 +198,7 @@ In the AMON data format, the "entities" section is used to represent physical or
 All of the fields for the "entities" section of the AMON data format are discussed in more detail below.
 
 * **entityId**: A UUID for the "entity". Required for an "entity"; however, systems that implement the AMON data format may relax this requirement to make the field optional for AMON formatted messages that are requesting than an "entity" be created.
+* **description**: An optional textual description of the entity.
 * **deviceIds**: An array of "device" UUIDs, representing the "devices" that belong to the "entity".
 * **meteringPointIds**: An array of "meteringPoint" UUIDs, representing the "meteringPoints" that belong to the "entity".
 
